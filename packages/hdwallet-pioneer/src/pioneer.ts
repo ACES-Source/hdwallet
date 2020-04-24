@@ -58,16 +58,18 @@ const supportedCoins = [
   "BitcoinCash",
   "BitcoinGold",
   "Litecoin",
+  "EOS",
   "Dash",
   "DigiByte",
   "Dogecoin",
 ];
 
-const segwitCoins = ["Bitcoin", "Testnet", "BitcoinGold", "Litecoin"];
+const segwitCoins = ["Bitcoin", "Testnet", "BitcoinGold","Litecoin"];
 
 const COIN_MAP = {
   Bitcoin: "BTC",
   Cosmos: "ATOM",
+  EOS: "EOS",
   Testnet: "BTCT",
   BitcoinCash: "BCH",
   Litecoin: "LTC",
@@ -124,6 +126,8 @@ export class PioneerHDWallet implements HDWallet, ETHWallet, BTCWallet {
   _supportsBinance: boolean = true;
   _supportsRippleInfo: boolean = false;
   _supportsRipple: boolean = true;
+  _supportsEosInfo: boolean = false;
+  _supportsEos: boolean = true;
   _supportsDebugLink: boolean = false;
   _isPioneer: boolean = true;
 
@@ -291,16 +295,14 @@ export class PioneerHDWallet implements HDWallet, ETHWallet, BTCWallet {
   }
 
   public async cosmosGetAddress(msg: BTCGetAddress): Promise<string> {
-    console.log("*** msg", msg);
     let coinSymbol = COIN_MAP[msg.coin];
     let pathStr = addressNListToBIP32(msg.addressNList);
-    console.log("*** pathStr", pathStr);
     let pubKey = await generatePubkey(
       coinSymbol,
       this._WALLET_PUBLIC.coins[coinSymbol].xpub,
       pathStr
     );
-    console.log("*** pubKey: ", pubKey);
+
     //address
     let address = await generateAddress(coinSymbol, pubKey, null);
 
@@ -422,6 +424,7 @@ export class PioneerHDWalletInfo
   _supportsCosmosInfo: boolean = false;
   _supportsBinanceInfo: boolean = false;
   _supportsRippleInfo: boolean = false;
+  _supportsEosInfo: boolean = false;
 
   public getVendor(): string {
     return " ";
